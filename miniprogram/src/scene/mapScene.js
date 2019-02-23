@@ -32,12 +32,7 @@ export default class mapScene{
   }
 
   initMonsterData() {
-    wx.cloud.callFunction({
-      name: 'getUserData',
-      complete: res => {
-        console.log('callFunction test result: ')
-        console.log(res)
-      },
-    })
+    let gameData = wx.getStorageSync('gameData')
+    console.log(gameData)
   }
 }

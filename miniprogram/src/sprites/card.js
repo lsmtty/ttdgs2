@@ -135,8 +135,14 @@ export default class monsterCard extends sprite{
   }
 
   handleFeed() {
-    console.log('收养成功')
-    this.parent.randomMonster()
-    this.hide()
+    wx.cloud.callFunction({
+      name: 'setUserData',
+      data: {monsters: this.monster.id},
+      complete: res => {
+        console.log('喂养成功')
+        this.parent.randomMonster()
+        this.hide()
+      }
+    })
   }
 }

@@ -56,4 +56,19 @@ let playAnimation = function (animateSrc, width, height, num, parent, position,l
 		callback()
 	},200)
 }
-export default {playAudioAuto, playAnimation}
+
+/**
+ * 接口回调
+ * @param {object} data 接口参数 
+ * @param {function} data 成功回调
+ * @param {function} data 失败回调
+ */
+let solveData = function (data, successCb, errorCb){
+	if (data.errMsg == 'cloud.callFunction:ok') {
+		successCb && successCb()
+	} else {
+		// todo 网络出错
+		errorCb && errorCb()
+	}
+}
+export default {playAudioAuto, playAnimation, solveData}

@@ -8,9 +8,8 @@ import mathUtil from './src/utils/mathUtil'
 import Monster from './src/sprites/monster'
 import Bow from './src/sprites/bow'
 import Position from './src/other/position'
-import monsterConfig from './src/config/monster_config'
 import Weapon from './src/sprites/weapon'
-import monsterScene1 from './src/scene/monsterScene1'
+import monsterScene from './src/scene/monsterScene'
 import mapScene from './src/scene/mapScene'
 
 
@@ -58,21 +57,26 @@ app.renderer.plugins.interaction.mapPositionToPoint = (point, x, y) => {
   point.x = x * 750 / windowWidth
   point.y = y * 1334 / windowHeight
 }
-const ticker = new PIXI.ticker.Ticker();
+const ticker = new PIXI.ticker.Ticker()
 ticker.add((deltaTime) => {
   Tween.update();
 })
 
-ticker.start();
+ticker.start()
+
+wx.cloud.callFunction({
+  name: 'getGameData',
+  complete: res => {
+    gameUtil.solveData(res, () => {
+      wx.setStorageSync('gameData', res.result.data)
+    })
+  }
+})
 
 // 添加第一个场景
-let scene1 = new monsterScene1(app.stage)
+let scene1 = new monsterScene(app.stage)
 scenes.push(scene1)
 app.stage.addScene(0)
-
-if (!wx.getStorageSync('monster')) {
-  wx.setStorageSync('monster', monsterConfig)
-}
 
 
 

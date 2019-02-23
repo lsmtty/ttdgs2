@@ -64,10 +64,13 @@ export default class Monster extends sprite{
     } else {
       let damageText = new PIXI.Text(`-${damage}`, {
         fontFamily: 'FZCUYSJW--GB1-0',
-        fontSize: '40px',
-        fill: 'red'
+        fontSize: '60px',
+        fill: 'red',
+        fontWeight: 'bold',
+        stroke: '#ffffff',
+	      strokeThickness: 8,
       })
-      damageText.x = -20
+      damageText.x = -30
       damageText.y = - 350
       damageText.alpha = 0.6
       this.PIXIObject.addChild(damageText)
@@ -98,7 +101,7 @@ export default class Monster extends sprite{
             .easing(Tween.Easing.Linear.None)
             .start()
             .onComplete(_this.randomRun)
-    let s = new Tween.Tween(_this.PIXIObject.transform.scale)
+    let s = new Tween.Tween(this.PIXIObject.transform.scale)
       .to({ y: 0.9 }, 250)
       .easing(Tween.Easing.Linear.None)
       .start().yoyo(true).repeat(1)

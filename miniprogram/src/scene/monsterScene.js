@@ -7,18 +7,30 @@ import Position from '../../src/other/position'
 import card from '../../src/sprites/card'
 import mathUtil from '../../src/utils/mathUtil'
 import gameUtil from '../../src/utils/gameUtil'
-export default class monsterScene1 {
-  constructor(parent) {
+export default class monsterScene {
+  constructor(parent, sceneId) {
     this.parent = parent
+    this.sceneId = sceneId
     this.PIXIObject = new PIXI.Container()
     this.monster = null
     this.weapon = null
     this.monsterCard = null
     this.radish = null
     this.radish_timer = null
+    this.getMonstersData()
     this.initObject()
     gameUtil.playAudioAuto('assets/audio/bg_audio.mp3', true)
     return this
+  }
+
+  getMonstersData() {
+    let scenes = wx.getStorageSync('gameData').scenes
+    for (let i = 0;i < scenes.length;i ++) {
+      if (scenes[i].sceneId == this.sceneId) {
+        this.monsters = scenes[i].monsters
+        break
+      }
+    }
   }
 
   initObject() {
@@ -39,7 +51,7 @@ export default class monsterScene1 {
     this.weapon = new Bow(new Position(16 + 88, 16 + 80), this)
     weapon_wrap.addChild(this.weapon.PIXIObject)
 
-    this.createMonster(1)
+    this.createMonster()
     this.monsterCard =  new card(new Position(80, 285), this, null)
 
     let radish_wrap = new PIXI.Container()
@@ -122,17 +134,18 @@ export default class monsterScene1 {
     }
     this.radish_timer = new Tween.Tween(this.radish.transform.scale).to({y: 0.8},250)
       .easing(Tween.Easing.Linear.None).start().yoyo(true).repeat(1)
-    this.createMonster(1, true)
+    this.createMonster(true)
   }
 
-  createMonster (scene, refresh = false) {
+  createMonster (refresh = false) {
     if (refresh && this.monster) {
       this.PIXIObject.removeChild(this.monster.PIXIObject)
       this.weapon.destroyMonster()
       this.monster = null
     }
-    let randomNum = mathUtil.getRandomNum(1, 8)
-    this.monster = new Monster(100, '皮卡王', 1, randomNum, null, this , this.weapon)
+    let randomNum = mathUtil.getRandomNum(0, 7)
+    let monsterData = this.monsters[randomNum]
+    this.monster = new Monster(monsterData.life, monsterData.name, this.sceneId, monsterData.id, null, this , this.weapon)
     this.PIXIObject.addChild(this.monster.PIXIObject)
     this.weapon.setAssociateMonster(this.monster)
   }
