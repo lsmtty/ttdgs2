@@ -18,6 +18,7 @@ export default class monsterScene {
     this.radish = null
     this.radish_timer = null
     this.getMonstersData()
+    this.initSources()
     this.initObject()
     gameUtil.playAudioAuto('assets/audio/bg_audio.mp3', true)
     return this
@@ -32,6 +33,21 @@ export default class monsterScene {
       }
     }
   }
+
+  initSources() {
+    this.MiniPLoader = new MiniPLoader()
+    this.MiniPLoader.load(() => {
+      this.createMonster()
+      this.monsterCard =  new card(new Position(80, 285), this, null)
+    })
+    let sourcesFileidsId = []
+    for(let i = 0;i < this.monsters.length;i++) {
+      sourcesFileidsId.push(`cloud://ttdgs-test-c6724c.7474-ttdgs-test-c6724c/images/monsters/scece1/${this.monsters[i].id}.png`)
+      sourcesFileidsId.push(`cloud://ttdgs-test-c6724c.7474-ttdgs-test-c6724c/images/monsters/scece1/${this.monsters[i].id}_shadow.png`)
+    }
+    this.MiniPLoader.add(sourcesFileidsId)
+  }
+
 
   initObject() {
     // 添加背景
@@ -51,8 +67,7 @@ export default class monsterScene {
     this.weapon = new Bow(new Position(16 + 88, 16 + 80), this)
     weapon_wrap.addChild(this.weapon.PIXIObject)
 
-    this.createMonster()
-    this.monsterCard =  new card(new Position(80, 285), this, null)
+
 
     let radish_wrap = new PIXI.Container()
     let radish_timer = null
