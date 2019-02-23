@@ -26,7 +26,7 @@ export default class bow extends weapon{
       temp.transform.pivot.x = 8 //pivot 旋转中心
       temp.transform.pivot.y = 40
       temp.alpha = 0
-      this.parent.addChild(temp)
+      this.parent.PIXIObject.addChild(temp)
       this.arrows.push(temp)
     }
   }
@@ -52,7 +52,7 @@ export default class bow extends weapon{
     new Tween.Tween(arrow).to({ x: this.monster.position.x - 50, y: this.monster.position.y - 120}, 200).easing(Tween.Easing.Quintic.In).
       start().onComplete(function () {
         _this.monster.hurt(5, () => {}, function () {
-          _this.parent.removeChild(_this.monster.PIXIObject)
+          _this.parent.PIXIObject.removeChild(_this.monster.PIXIObject)
         })
         gameUtil.playAudioAuto('assets/audio/hit_audio.mp3')
       })
@@ -61,6 +61,6 @@ export default class bow extends weapon{
   }
 
   destroy() {
-    this.parent.removeChild(this.PIXIObject)
+    this.parent.PIXIObject.removeChild(this.PIXIObject)
   }
 }

@@ -55,12 +55,10 @@ export default class Monster extends sprite{
     if (this.blood == 0) return
     let _this = this
     this.blood = (this.blood - damage >= 0) ? this.blood - damage : 0
-    gameUtil.playAnimation('assets/animate/blood.png', 900, 300, 3, this.parent, this.position, false)
+    gameUtil.playAnimation('assets/animate/blood.png', 900, 300, 3, this.parent.PIXIObject, this.position, false)
     if(this.blood == 0) {
-      this.weapon = null
-      gameUtil.playAnimation('assets/animate/disappear.png', 2700, 300, 9, this.parent, this.position, false, () => {
-        this.parent.monsterCard.setMonster(this)
-        this.parent.monsterCard.show()
+      gameUtil.playAnimation('assets/animate/disappear.png', 2700, 300, 9, this.parent.PIXIObject, this.position, false, () => {
+        this.parent.showInMonsterCard()
         destorycb && typeof destorycb == 'function' && destorycb()
       })
     } else {
@@ -96,24 +94,13 @@ export default class Monster extends sprite{
         maxY = Math.min(400 + 240, this.position.y + 50)
     this.position.x = mathUtil.getRandom(minX, maxX), this.position.y = mathUtil.getRandom(minY, maxY);
     let t = new Tween.Tween(this.PIXIObject)
-            .to(this.position, 500)
+            .to(_this.position, 500)
             .easing(Tween.Easing.Linear.None)
             .start()
-            .onComplete(this.randomRun)
+            .onComplete(_this.randomRun)
     let s = new Tween.Tween(_this.PIXIObject.transform.scale)
       .to({ y: 0.9 }, 250)
       .easing(Tween.Easing.Linear.None)
       .start().yoyo(true).repeat(1)
-    if (this.weapon) {
-      let r = mathUtil.getRotation({x : 750 - 275 - (16 + 88), y: 1334 - 480 - (16 + 80) }, {x: this.position.x, y: this.position.y - 120})
-      new Tween.Tween(this.weapon.PIXIObject.transform)
-        .to({ rotation: (r - 90) / 180 * Math.PI}, 500)
-        .easing(Tween.Easing.Linear.None)
-        .start()
-    }
-  }
-
-  destory() {
-    this.weapon = null
   }
 }

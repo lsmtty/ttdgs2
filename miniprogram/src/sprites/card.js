@@ -115,21 +115,12 @@ export default class monsterCard extends sprite{
   }
 
   hide() {
-    this.parent.removeChild(this.PIXIObject)
+    this.parent.PIXIObject.removeChild(this.PIXIObject)
   }
 
   show() {
     this.PIXIObject = this.initPIXI()
-    this.parent.addChild(this.PIXIObject)
-    // new Tween.Tween(this.PIXIObject.transform.scale)
-    // .from({x: 0.5, y: 0.5})
-    // .to({x: 1, y: 1}, 200)
-    // .easing(Tween.Easing.Linear.None).start()
-
-    // new Tween.Tween(this.PIXIObject)
-    // .from({alpha: 0.6})
-    // .to({alpha: 1}, 200)
-    // .easing(Tween.Easing.Linear.None).start()
+    this.parent.PIXIObject.addChild(this.PIXIObject)
   }
 
   refresh() {
@@ -139,11 +130,13 @@ export default class monsterCard extends sprite{
 
   handleSend() {
     console.log('送人成功')
+    this.parent.randomMonster()
     this.hide()
   }
 
   handleFeed() {
     console.log('收养成功')
+    this.parent.randomMonster()
     this.hide()
   }
 }
