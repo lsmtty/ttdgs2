@@ -23,6 +23,7 @@ export default class monsterScene1 {
 
   initObject() {
     // 添加背景
+    let _this = this
     const bkg = PIXI.Sprite.fromImage('assets/images/bg.png')
     bkg.width = 750
     bkg.height = 1334
@@ -50,7 +51,7 @@ export default class monsterScene1 {
     let radish_bg = PIXI.Sprite.fromImage('assets/images/radish_bg.png')
     radish_wrap.addChild(radish_bg)
     this.radish = PIXI.Sprite.fromImage('assets/images/radish.png')
-    this.radish.x = 75, this.radish.y = 54
+    this.radish.x = 75, this.radish.y = 60
     this.radish.transform.pivot.y = 50
     this.radish.transform.pivot.x = 50
     radish_wrap.addChild(this.radish)
@@ -73,6 +74,45 @@ export default class monsterScene1 {
     dictText.x = 320;
     dictText.y = 1272;
     this.PIXIObject.addChild(dictText)
+
+    // 创建大地图按钮
+    let world_map_container = new PIXI.Container()
+    world_map_container.width = 221
+    world_map_container.height = 94
+    world_map_container.x = 576, world_map_container.y = 120
+    this.PIXIObject.addChild(world_map_container)
+    let world_map_bg = new PIXI.Graphics()
+    world_map_bg.beginFill(0x6C503B, 1)
+    world_map_bg.drawRoundedRect(0, 0, 221, 94, 47)
+    world_map_bg.endFill()
+    world_map_container.addChild(world_map_bg)
+    let icon_world_map = new PIXI.Sprite.fromImage('assets/images/common/icon_worldmap.png')
+    icon_world_map.x = 25
+    icon_world_map.y = 17
+    icon_world_map.width = 60, icon_world_map.height = 60
+    world_map_container.addChild(icon_world_map)
+
+    let dictTextFirstLine = new PIXI.Text('世界', {
+      fontFamily: 'PingFangSC-Regular',
+      fontSize: '24px',
+      fill: 'white'
+    })
+    dictTextFirstLine.x = 104;
+    dictTextFirstLine.y = 21;
+    world_map_container.addChild(dictTextFirstLine)
+    let dictTextSecondLine = new PIXI.Text('地图', {
+      fontFamily: 'PingFangSC-Regular',
+      fontSize: '24px',
+      fill: 'white'
+    })
+    dictTextSecondLine.x = 104;
+    dictTextSecondLine.y = 49;
+    world_map_container.addChild(dictTextSecondLine)
+
+    world_map_container.interactive = true;
+    world_map_container.on("tap", () => {
+      _this.gotoWorldMap()
+    })
   }
 
   randomMonster (){
@@ -100,5 +140,10 @@ export default class monsterScene1 {
   showInMonsterCard() {
     this.monsterCard.setMonster(this.monster)
     this.monsterCard.show()
+  }
+
+  gotoWorldMap() {
+    //this.parent.removeScene(0)
+    this.parent.getMainScene()
   }
 }

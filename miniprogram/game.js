@@ -11,6 +11,7 @@ import Position from './src/other/position'
 import monsterConfig from './src/config/monster_config'
 import Weapon from './src/sprites/weapon'
 import monsterScene1 from './src/scene/monsterScene1'
+import mapScene from './src/scene/mapScene'
 
 
 const { pixelRatio, windowWidth, windowHeight } = wx.getSystemInfoSync()
@@ -22,6 +23,7 @@ const app = new PIXI.Application({
   forceCanvas: true,
   view: canvas
 })
+const mainScene = null
 
 // 云平台函数注册
 wx.cloud.init()
@@ -32,7 +34,7 @@ wx.cloud.callFunction({
   }
 })
 
-// 定义主舞台场景切换函数，以及初始化定位和计时器
+// todo 场景的存储方法
 let scenes = []
 app.stage.removeScene = function (index) {
   app.stage.removeChild(scenes[index].PIXIObject)
@@ -40,6 +42,16 @@ app.stage.removeScene = function (index) {
 
 app.stage.addScene = function (index) {
   app.stage.addChild(scenes[index].PIXIObject)
+}
+
+app.stage.getMainScene = function () {
+  if (mainScene) {
+    app.stage.addChild(mainScene.PIXIObject)
+  } else {
+    let mainScene = new mapScene(app.stage)
+    scenes.push(mainScene)
+    app.stage.addChild(mainScene.PIXIObject)
+  }
 }
 
 app.renderer.plugins.interaction.mapPositionToPoint = (point, x, y) => {
@@ -57,35 +69,6 @@ ticker.start();
 let scene1 = new monsterScene1(app.stage)
 scenes.push(scene1)
 app.stage.addScene(0)
-
-
-// let newLoader  = new MiniPLoader()
-// newLoader.load(loadingFinish)
-// newLoader.add(['cloud://ttdgs-test-c6724c.7474-ttdgs-test-c6724c/images/common/world_map.png',
-// 'cloud://ttdgs-test-c6724c.7474-ttdgs-test-c6724c/images/map/微信图片_20181223213905.jpg'])
-
-// function loadingFinish () {
-//   var world_map = PIXI.Sprite.fromImage(
-//     newLoader.resources('cloud://ttdgs-test-c6724c.7474-ttdgs-test-c6724c/images/common/world_map.png')
-//   )
-//   world_map.width = 60
-//   world_map.height = 60
-//   world_map.x = 601, world_map.y = 58
-//   world_map.interactive = true
-//   world_map.on('tap', () => {
-//     app.stage.removeScene(0)
-//     let scece2 = new PIXI.Container()
-//     sceces.push(scece2)
-//     var bkg_map = PIXI.Sprite.fromImage(
-//       newLoader.resources('cloud://ttdgs-test-c6724c.7474-ttdgs-test-c6724c/images/map/微信图片_20181223213905.jpg')
-//     )
-//     bkg_map.width = 750
-//     bkg_map.height = 1334
-//     scece2.addChild(bkg_map)
-//     app.stage.addScene(1)
-//   })
-//   scece1.addChild(world_map)
-// }    
 
 if (!wx.getStorageSync('monster')) {
   wx.setStorageSync('monster', monsterConfig)
