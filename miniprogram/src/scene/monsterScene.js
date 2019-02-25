@@ -27,7 +27,7 @@ export default class monsterScene {
   getMonstersData() {
     let scenes = wx.getStorageSync('gameData').scenes
     for (let i = 0;i < scenes.length;i ++) {
-      if (scenes[i].sceneId == this.sceneId) {
+      if (scenes[i].id == this.sceneId) {
         this.monsters = scenes[i].monsters
         break
       }

@@ -1,8 +1,13 @@
+// PIXI 游戏loader封装类
 export default class MiniPLoader{
   constructor() {
     this.sourcesMaps = new Map()
   }
 
+  /**
+   * 添加资源
+   * @param {array} sources 资源
+   */
   add(sources) {
     let _this = this
     let downLoadPromise = []
