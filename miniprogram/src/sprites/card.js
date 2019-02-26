@@ -1,6 +1,7 @@
 import sprite from "./sprite";
 import * as PIXI from '../../src/libs/pixi.js'
 import * as Tween from '../../src/libs/Tween.js'
+import Director from '../direrctor'
 export default class monsterCard extends sprite{
   constructor(position, parent, monster, saveFlag = true) {
     super(position ,parent)
@@ -45,7 +46,7 @@ export default class monsterCard extends sprite{
       catchNumberText.transform.pivot.x = 57.5
       catchText.transform.pivot.y = 0
       card.addChild(catchNumberText)
-
+      
       let buddle = PIXI.Sprite.fromImage('assets/images/common/buddle.png')
       buddle.x = 174,buddle.y = 217
       buddle.width = 242, buddle.height = 81
@@ -59,7 +60,9 @@ export default class monsterCard extends sprite{
       monsterSay.y = 232
       card.addChild(monsterSay)
 
-      let monsterSrc = monsterSrc = 'assets/images/monsters/scene' + this.monster.scene + '/monster' + this.monster.id + '.png'
+      let loader = Director.getInstance().getLoaderBySceneId(this.monster.scene).loader
+      let monster_container = new PIXI.Container()
+      let monsterSrc = loader.resources(`cloud://ttdgs-test-c6724c.7474-ttdgs-test-c6724c/images/monsters/${this.monster.scene}/${this.monster.id}.png`)
       let monster = PIXI.Sprite.fromImage(monsterSrc)
       monster.x = 208
       monster.y = 345

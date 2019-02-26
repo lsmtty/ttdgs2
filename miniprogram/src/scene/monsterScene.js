@@ -7,6 +7,7 @@ import Position from '../../src/other/position'
 import card from '../../src/sprites/card'
 import mathUtil from '../../src/utils/mathUtil'
 import gameUtil from '../../src/utils/gameUtil'
+import Director from '../direrctor'
 export default class monsterScene {
   constructor(parent, sceneId) {
     this.parent = parent
@@ -35,17 +36,14 @@ export default class monsterScene {
   }
 
   initSources() {
-    this.MiniPLoader = new MiniPLoader()
-    this.MiniPLoader.load(() => {
-      this.createMonster()
-      this.monsterCard =  new card(new Position(80, 285), this, null)
-    })
-    let sourcesFileidsId = []
-    for(let i = 0;i < this.monsters.length;i++) {
-      sourcesFileidsId.push(`cloud://ttdgs-test-c6724c.7474-ttdgs-test-c6724c/images/monsters/scece1/${this.monsters[i].id}.png`)
-      sourcesFileidsId.push(`cloud://ttdgs-test-c6724c.7474-ttdgs-test-c6724c/images/monsters/scece1/${this.monsters[i].id}_shadow.png`)
-    }
-    this.MiniPLoader.add(sourcesFileidsId)
+    let timer = setInterval(() => {
+      let loader = Director.getInstance().getLoaderBySceneId(this.sceneId)
+      if (loader.isFinish) {
+        this.createMonster()
+        this.monsterCard =  new card(new Position(80, 285), this, null)
+        clearInterval(timer)
+      }
+    }, 100)
   }
 
 
@@ -171,7 +169,8 @@ export default class monsterScene {
   }
 
   gotoWorldMap() {
-    //this.parent.removeScene(0)
-    this.parent.getMainScene()
+    let direrctor = Director.getInstance()
+    direrctor.gotoMainScene(this.sceneId)
+    direrctor.hideSceneById(this.sceneId)
   }
 }

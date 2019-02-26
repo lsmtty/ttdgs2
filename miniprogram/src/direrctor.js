@@ -8,7 +8,7 @@ import mapScene from './scene/mapScene'
 
 export default class Director {
   constructor() {
-    this.scenesLoaders = [] // 初始化场景loader列表，全局控制
+    this.scenesLoaders = new Map() // 初始化场景loader列表，全局控制
     this.scenes = []
   }
 
@@ -83,15 +83,22 @@ export default class Director {
     // 添加第一个场景
     // 根据分享进入
     let gameScenesData = gameData.scenes
-    let scene1 = new monsterScene(this.app.stage, gameScenesData[0].id)
-    this.showSceneById(gameScenesData[0].id, scene1)
+    this.showSceneById(gameScenesData[0].id)
   }
 
   /**
    * 根据Id添加场景,进入场景队列
    */
-  addSceneById(id, scene) {
+  addSceneById(id) {
+    let scene = ''
+    this.initLoader(id)
+    if (id == 'main') {
+      scene = new mapScene(this.app.stage)
+    } else {
+      scene = new monsterScene(this.app.stage, id)
+    }
     this.scenes.push({id, scene})
+    return scene
   }
 
   /**
@@ -111,27 +118,37 @@ export default class Director {
   /**
   * 根据Id展示场景
   */
-  showSceneById(id, scene = null) {
+  showSceneById(id) {
     let initFlag = true
     if (this.scenes.length) {
       for(let i = 0;i < this.scenes.length;i++) {
         if (this.scenes[i].id == id) {
-          this.app.stage.addChild(this.scenes[i].PIXIObject)
+          this.app.stage.addChild(this.scenes[i].scene.PIXIObject)
           initFlag = false
         }
       }
     }
-    if (initFlag && scene) {
-      this.addSceneById(id, scene)
+    if (initFlag) {
+      let scene = this.addSceneById(id)
       this.app.stage.addChild(scene.PIXIObject)
     }
+  }
+
+  gotoMainScene() {
+    this.showSceneById('main')
   }
 
   /**
    * 根据Id隐藏场景，并不销毁场景实例
    */
   hideSceneById(id) {
-
+    if (this.scenes.length) {
+      for(let i = 0;i < this.scenes.length;i++) {
+        if (this.scenes[i].id == id) {
+          this.app.stage.removeChild(this.scenes[i].scene.PIXIObject)
+        }
+      }
+    }
   }
 
   /**
@@ -156,6 +173,31 @@ export default class Director {
    * @param {array} resources 资源field数组
    */
   initLoader(sceneId, resources = null) {
-    
+    if (this.scenesLoaders.get(sceneId)) {
+      return
+    }
+    let gameData = wx.getStorageSync('gameData')
+    let newLoader = new MiniPLoader()
+    newLoader.load(() => {
+      let loaderData = this.scenesLoaders.get(sceneId)
+      this.scenesLoaders.set(sceneId, {loader: newLoader, isFinish: true})
+    })
+    let sourcesFileidsId = []
+    gameData.scenes.forEach(scene => {
+      if (scene.id == sceneId) {
+        let monsters = scene.monsters
+        for(let i = 0;i < monsters.length;i++) {
+          //cloud://ttdgs-test-c6724c.7474-ttdgs-test-c6724c/images/monsters/scece1/s1_monster1.png
+          sourcesFileidsId.push(`cloud://ttdgs-test-c6724c.7474-ttdgs-test-c6724c/images/monsters/${sceneId}/${monsters[i].id}.png`)
+          sourcesFileidsId.push(`cloud://ttdgs-test-c6724c.7474-ttdgs-test-c6724c/images/monsters/${sceneId}/${monsters[i].id}_shadow.png`)
+        }
+      }
+    })
+    newLoader.add(sourcesFileidsId)
+    this.scenesLoaders.set(sceneId, {loader: newLoader, isFinish: false})
+  }
+
+  getLoaderBySceneId(sceneId) {
+    return this.scenesLoaders.get(sceneId)
   }
 }

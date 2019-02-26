@@ -4,7 +4,7 @@ import mathUtil from '../utils/mathUtil'
 import gameUtil from '../utils/gameUtil'
 import * as PIXI from '../../src/libs/pixi.js'
 import * as Tween from '../../src/libs/Tween.js'
-
+import Director from '../direrctor'
 export default class Monster extends sprite{
   constructor(blood, name, scene, id, position, parent, weapon) {
     super(position)
@@ -27,8 +27,9 @@ export default class Monster extends sprite{
   }
 
   initPIXI() {
+    let loader = Director.getInstance().getLoaderBySceneId(this.scene).loader
     let monster_container = new PIXI.Container()
-    let monsterSrc = monsterSrc = 'assets/images/monsters/scene' + this.scene + '/monster' + this.id + '_shadow.png'
+    let monsterSrc = loader.resources(`cloud://ttdgs-test-c6724c.7474-ttdgs-test-c6724c/images/monsters/${this.scene}/${this.id}.png`)
     let monster = PIXI.Sprite.fromImage(monsterSrc)
     monster_container.addChild(monster)
     monster.width = 240, monster.height = 240

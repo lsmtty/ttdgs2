@@ -1,6 +1,7 @@
 import * as PIXI from '../../src/libs/pixi.js'
 import gameUtil from '../../src/utils/gameUtil'
 import MiniPLoader from '../../src/other/loader'
+import Director from '../direrctor'
 export default class mapScene{
   constructor(parent) {
     this.parent = parent
@@ -27,7 +28,8 @@ export default class mapScene{
     this.PIXIObject.addChild(icon_back)
     icon_back.interactive = true
     icon_back.on("tap", () => {
-      this.parent.removeChild(this.PIXIObject)
+      Director.getInstance().showSceneById(this.PIXIObject)
+      Director.getInstance().hideSceneById('main')
     })
   }
 

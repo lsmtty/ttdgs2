@@ -6,7 +6,7 @@ export default class MiniPLoader{
 
   /**
    * 添加资源
-   * @param {array} sources 资源
+   * @param {array} sources 资源fields
    */
   add(sources) {
     let _this = this
